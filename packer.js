@@ -13,9 +13,9 @@ if ( fs.existsSync('settings.json') ) {
     config = JSON.parse(fs.readFileSync('settings.json').toString())
 } else {
     config = {
-        "keywordSingle": "RL_IMPORT",
-        "keywordDirectory": "RL_IMPORTDIR",
-        "keywordMulti": "RL_IMPORTMULTI",
+        "keywordSingle": "IMPORT",
+        "keywordDirectory": "IMPORT_DIR",
+        "keywordMulti": "IMPORT_MULTI",
         
         "tabLength": 4,
         "outputFile": "compiled.lua",
