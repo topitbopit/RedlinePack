@@ -1,0 +1,9 @@
+{
+    "keywordSingle": "RL_IMPORT",
+    "keywordDirectory": "RL_IMPORTDIR",
+    "keywordMulti": "RL_IMPORTMULTI",
+    
+    "tabLength": 4,
+    "outputFile": "compiled.lua",
+    "inputFile": "src/main.lua"
+}
