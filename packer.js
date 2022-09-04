@@ -1,9 +1,7 @@
-/* RedlinePack v1.0.0 */
+/* RedlinePack v1.0.1 */
 /* Written by topit for Redline */
 
 // Warning: I know no fucking JS so this code is extremely garbage 
-
-
 
 const fs = require('fs')
 const path = require('path')
@@ -60,7 +58,6 @@ class Packer {
                     let importPath = match[1] // src/temp.lua
                     
                     let importContents = this.parseFile(importPath)
-                    
                     if ( importContents ) {
                         importContents = importContents.split(/\n/).map(function(line) {
                             return indentLevel1 + line
@@ -68,6 +65,7 @@ class Packer {
                         
                         let result = `(function() -- ${ importPath }\n` + importContents + `\nend)()`
                         
+                        result = result.replace('$', '$$$$') // i love javascript!!!
                         contents = contents.replace(statement, result)
                     }
                 }
@@ -164,6 +162,6 @@ class Packer {
 }
 
 let thisPacker = new Packer()
-let a = thisPacker.parseFile(config.inputFile)
+let output = thisPacker.parseFile(config.inputFile)
 
-fs.writeFileSync(config.outputFile, a)
+fs.writeFileSync(config.outputFile, output)
