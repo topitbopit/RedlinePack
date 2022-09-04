@@ -1,7 +1,7 @@
-/* RedlinePack v1.0.1 */
+/* RedlinePack v1.0.2 */
 /* Written by topit for Redline */
 
-// Warning: I know no fucking JS so this code is extremely garbage 
+// Warning: I know no fucking JS so this code might be garbage 
 
 const fs = require('fs')
 const path = require('path')
@@ -77,6 +77,10 @@ class Packer {
                     let statement = match[0]
                     let importPath = match[1]
                     
+                    if ( importPath.slice(-1) != '/' ) { 
+                        importPath += '/'
+                    }
+                    
                     let result = ''
                     
                     let dirFiles = fs.readdirSync(importPath)
@@ -104,6 +108,7 @@ class Packer {
                         result = result.slice(0, -2)
                     }
                     
+                    result = result.replace('$', '$$$$')
                     contents = contents.replace(statement, result)
                 }
             }
@@ -114,6 +119,10 @@ class Packer {
                     // example input: "IMPORT_DIR('src/libraries')"
                     let statement = match[0] // IMPORT_DIR('src/libraries')
                     let importPath = match[1] // src/libraries
+                    
+                    if ( importPath.slice(-1) != '/' ) { 
+                        importPath += '/'
+                    }
                     
                     let result = `do \n${ indentLevel1 }(function() -- ${ importPath }\n`
                     
@@ -145,6 +154,7 @@ class Packer {
                         result += `${ indentLevel1}end)()\nend`
                     }
                     
+                    result = result.replace('$', '$$$$')
                     contents = contents.replace(statement, result)
                 }
             }
