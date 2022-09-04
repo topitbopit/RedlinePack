@@ -99,7 +99,9 @@ If you're still confused and need to know how to setup a project, take a look at
 ## To-do  
 
  - [x] Multi-file importing  
- - [ ] Fix directory importing breaking if the path doesn't have a slash at the end  
+ - [x] Fix $ string patterns breaking when packing  
+ - [x] Fix directory importing breaking if the path doesn't have a slash at the end  
  - [ ] Command line arguments  
  - [ ] More helpful debug info  
- - [ ] Ability to disable filepath comments
+ - [ ] Ability to disable filepath comments  
+ - [ ] Ability to enable redundant importing (importing a file multiple times)  
