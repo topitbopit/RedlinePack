@@ -1,4 +1,4 @@
-/* RedlinePack v1.0.2 */
+/* RedlinePack v1.0.3 */
 /* Written by topit for Redline */
 
 // Warning: I know no fucking JS so this code might be garbage 
@@ -65,7 +65,7 @@ class Packer {
                         
                         let result = `(function() -- ${ importPath }\n` + importContents + `\nend)()`
                         
-                        result = result.replace('$', '$$$$') // i love javascript!!!
+                        result = result.replaceAll('$', '$$$$') // i love javascript!!!
                         contents = contents.replace(statement, result)
                     }
                 }
@@ -108,7 +108,7 @@ class Packer {
                         result = result.slice(0, -2)
                     }
                     
-                    result = result.replace('$', '$$$$')
+                    result = result.replaceAll('$', '$$$$')
                     contents = contents.replace(statement, result)
                 }
             }
@@ -154,7 +154,7 @@ class Packer {
                         result += `${ indentLevel1}end)()\nend`
                     }
                     
-                    result = result.replace('$', '$$$$')
+                    result = result.replaceAll('$', '$$$$')
                     contents = contents.replace(statement, result)
                 }
             }
