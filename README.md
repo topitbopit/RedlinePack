@@ -7,6 +7,8 @@
 
 Unlike most other packers, it doesn't do very much file processing, minification, or any modification of your files. This means that your files should be perfectly compatible, no matter what syntax you use.  
 
+Although this simplicity does bring a few caveats, like how some formatting will likely never be perfect, RedlinePack does try to get close.  
+
 As the name suggests, this was written for [Redline](https://github.com/topitbopit/Redline).  
 
 **Have any questions? DM me  at topit#4057 or open up an issue.**  
@@ -22,86 +24,116 @@ Even though RedlinePack is super simple to use, it won't be the best tool for ev
 ## Installation
 RedlinePack is written in JS and requires Node, [which can be found here](https://nodejs.org/en/download/).  
 
-Installation is as simple as downloading the repository and running `node packer.js`.  
-Make sure that `settings.json` is located in the running directory.  
+Installation is as simple as downloading the repository, deleting anything extra, and running `node packer.js`.  
+Alternatively, you can download an already setup "workspace" in the [Releases section](https://github.com/topitbopit/RedlinePack/releases).  
+
 
 > By default, RedlinePack will use `src/main.lua` as input and output a file called `compiled.lua`. If you want to change these settings, modify `settings.json` !  
 
 ## Usage  
 
-RedlinePack lets you import files in 3 different ways:  
-- IMPORT, which imports a single file  
-- IMPORT_MULTI, which imports each file in a directory independent of each other  
+#### Importing
+RedlinePack handles importing via three different pseudo functions, which are  
+- IMPORT, which imports a single file as expected  
+- IMPORT_MULTI, which imports each file located inside of a directory independent of each other  
 - IMPORT_DIR, which runs each file in a directory within a single function  
 
+> Only IMPORT and IMPORT_MULTI can return values!  
+
 Importing is done by simply calling the respective function.  
-For example, if you needed to import a file called 'test.lua', that would be done with  
+For example...  
 ```lua
-local test = IMPORT('src/test.lua')
+local test = IMPORT('src/test.lua') -- import a single file called "test.lua"
+
+local library1, library2 = IMPORTMULTI('src/libraries/') -- import every file located in src/libraries/
+
+IMPORTDIR('src/modules/') -- "inline" every file located in src/modules/
 ```
-> Make sure to clearly call the function! Doing any trickery like `( IMPORT   )  ( ([[src/test.lua]])  )` will not work!  
+> Note that these are not actual functions. You can't do something like this, it'll break.
+> ```lua
+> local a = 'scr/test.lua'
+> local new = IMPORT
+> new(a)
+> ```
 
+#### Building
+Unlike other file packers, RedlinePack is unique in that it doesn't take command line arguments. This is definitely an intentional limitation, and definitely not because I don't know how.  
 
-## Example
+In order to change build settings, you must edit the `settings.json` file. Most options are self explanatory, but the full list of them is below.  
 
-Input `main.lua`:  
+**inputFile** - the file to start packing with. Defaults to `"src/main.lua"`  
+**outputFile** - the file to "compile" / pack everything into. Defaults to `"compiled.lua"`  
+
+**keywordSingle** - the keyword used for single file imports. Defaults to `"IMPORT"`  
+**keywordMulti** - the keyword used for multi file imports. Defaults to `"IMPORT_MULTI"`  
+**keywordDirectory** - the keyword used for directory imports. Defaults to `"IMPORT_DIR"`  
+
+**tabLength** - how many spaces each tab is. Defaults to `4`  
+**smartIndents** - fixes up formatting issues by trying to figure out and apply the current indentation level to the packed output. Defaults to `true`  
+> If **smartIndents** is true, make sure that **tabLength** is set to the tab length you use or else smartIndents won't work  
+
+**fileComments** - adds comments to the end of import statements displaying what file each import is. Defaults to `true`  
+**packerWatermark** - adds a RedlinePack watermark to the top of the final packed file. Defaults to `true`  
+**verboseLogs** - displays extra info logs when enabled, showing what happens in more detail. Defaults to `true`  
+**redundantImporting** - lets you import the same file multiple times. RedlinePack will stack overflow if redundant importing is used incorrectly, and therefore is very experimental! Defaults to `false`  
+> IMPORT_MULTI and IMPORT_DIR will check to see if you're importing the input file to stop overflows, but this doesn't stop everything. If you use redundantImporting, be careful! 
+
+## Example input / output  
+#### Inputs  
+*main.lua*  
 ```lua
-local file = IMPORT('src/file.lua')
-print(file.version)
-
-local lib1, lib2 = IMPORT_MULTI('src/lib/')
-
-IMPORT_DIR('src/extra/')
+-- hello from main.lua!
+local fi = IMPORT('src/file.lua')
+local f1, f2, f3 = IMPORT_MULTI('src/many_files/')
+```  
+*file.lua*  
+```lua
+local file = true
+return file
 ```
-Output `compiled.lua`:  
+*many_files/file1.lua*  
 ```lua
-local file = (function() -- src/file.lua
-    return { version = 'v1.0.0' }
+local file = 1
+return file
+```
+*many_files/file2.lua*  
+```lua
+local file = 2
+return file
+```
+*many_files/file3.lua*  
+```lua
+local file = 3
+return file
+```
+#### Output     
+```lua
+-- Packed using RedlinePack v1.1.0
+-- hello from main.lua!
+local fi = (function() 
+    local file = true
+    return file
 end)()
-print(file.version)
-
-local lib1, lib2 = (function() -- src/lib/lib1.lua
-    local lib1 = {}
-    
-    function lib1:isLibrary() 
-        return true
-    end
-    
-    return lib1
-end)(), (function() -- src/lib/lib2.lua
-    local lib2 = {}
-    
-    function lib2:isLibrary() 
-        return true
-    end
-    
-    return lib2
+local f1, f2, f3 = (function() 
+    local file = 1
+    return file
+end)(), (function() 
+    local file = 2
+    return file
+end)(), (function() 
+    local file = 3
+    return file
 end)()
-
-do 
-    (function() -- src/extra/
-        do -- src/extra/extra1.lua
-            print('Hello from extra1.lua!')
-        end
-        do -- src/extra/extra2.lua
-            print('Hello from extra2.lua!')
-        end
-        do -- src/extra/extra3.lua
-            print('Hello from extra3.lua!')
-        end
-    end)()
-end
 ```
-
-
-If you're still confused and need to know how to setup a project, take a look at the [example in the RedlinePack repository](https://github.com/topitbopit/RedlinePack/tree/main/example).  
+If you're still confused and want to know how to setup a project, take a look at the [releases section](https://github.com/topitbopit/RedlinePack/releases) within the repository.  
 
 ## To-do  
-
- - [x] Multi-file importing  
- - [x] Fix $ string patterns breaking when packing  
- - [x] Fix directory importing breaking if the path doesn't have a slash at the end  
  - [ ] Command line arguments  
- - [ ] More helpful debug info  
- - [ ] Ability to disable filepath comments  
- - [ ] Ability to enable redundant importing (importing a file multiple times)  
+ - [x] Multi-file importing (Done on September 3, 2022)  
+ - [x] Fix $ string patterns breaking when packing (Done on September 3, 2022)  
+ - [x] Fix directory importing breaking if the path doesn't have a slash at the end (Done on September 3, 2022)  
+ - [x] More helpful debug info (Done on October 5, 2022)  
+ - [x] Ability to disable filepath comments (Done on October 5, 2022)  
+ - [x] Ability to enable redundant importing (Done on October 5, 2022)  
+ - [x] Extra console output (Done on October 5, 2022)
+ - [x] Intelligent formatting (Done on October 5, 2022)
