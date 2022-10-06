@@ -4,6 +4,13 @@
     "keywordMulti": "IMPORT_MULTI",
     
     "tabLength": 4,
+    "smartIndents": true, 
+    
+    "fileComments": false, 
+    "redundantImporting": true,
+    "packerWatermark": true,
+    "verboseLogs": true, 
+    
     "outputFile": "compiled.lua",
     "inputFile": "src/main.lua"
 }
