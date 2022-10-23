@@ -3,7 +3,7 @@
 </div>  
 
 # RedlinePack
-**RedlinePack** is an extremely simple Lua file packer. It lets you combine multiple .lua files into a single output file in a module like format, where files can "require" other files.  
+**RedlinePack** is an extremely simple Lua file packer. It lets you combine multiple .lua files into a single output file in a module-like format, where files can "require" other files.  
 
 Unlike most other packers, it doesn't do very much file processing, minification, or any modification of your files. This means that your files should be perfectly compatible, no matter what syntax you use.  
 
