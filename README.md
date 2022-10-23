@@ -22,10 +22,10 @@ Even though RedlinePack is super simple to use, it won't be the best tool for ev
  - [RobLoach's luapack](https://github.com/RobLoach/luapack)  
 
 ## Installation
-RedlinePack is written in JS and requires Node, [which can be found here](https://nodejs.org/en/download/).  
+RedlinePack is written in JS and requires Node.js, [which can be found here](https://nodejs.org/en/download/).  
 
 Installation is as simple as downloading the repository, deleting anything extra, and running `node packer.js`.  
-Alternatively, you can download an already setup "workspace" in the [Releases section](https://github.com/topitbopit/RedlinePack/releases).  
+Alternatively, you can download an already setup "workspace" in the [releases section](https://github.com/topitbopit/RedlinePack/releases).  
 
 
 > By default, RedlinePack will use `src/main.lua` as input and output a file called `compiled.lua`. If you want to change these settings, modify `settings.json` !  
