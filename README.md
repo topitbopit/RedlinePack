@@ -11,20 +11,20 @@ Although this simplicity does bring a few caveats, like how some formatting will
 
 As the name suggests, this was written for [Redline](https://github.com/topitbopit/Redline).  
 
-**Have any questions? DM me  at topit#4057 or open up an issue.**  
+**Have any questions? Open up an issue on this repo or DM me on Discord at topit#4057.**  
 ## Alternatives
 Even though RedlinePack is super simple to use, it won't be the best tool for everyone. Here's a list of several other Lua packers that you can use in case RedlinePack doesn't work out:  
 
  - [Tape](https://github.com/Belkworks/tape)  
- - [Lua-pack](https://github.com/Bork0038/lua-pack) (discontinued?)  
- -  [LuaCompact](https://github.com/Parritz/LuaCompact)  
+ - ~~Bork's Lua-pack~~ Now discontinued
+ - [LuaCompact](https://github.com/Parritz/LuaCompact)  
  - [Le0Dev's luapack](https://github.com/Le0Developer/luapack)  
  - [RobLoach's luapack](https://github.com/RobLoach/luapack)  
 
 ## Installation
 RedlinePack is written in JS and requires Node.js, [which can be found here](https://nodejs.org/en/download/).  
 
-Installation is as simple as downloading the repository, deleting anything extra, and running `node packer.js`.  
+Installation is as simple as downloading the repository, deleting unwanted extra files (like the icon), and lastly running `node packer.js`.  
 Alternatively, you can download an already setup "workspace" in the [releases section](https://github.com/topitbopit/RedlinePack/releases).  
 
 
@@ -33,23 +33,23 @@ Alternatively, you can download an already setup "workspace" in the [releases se
 ## Usage  
 
 #### Importing
-RedlinePack handles importing via three different pseudo functions, which are  
-- IMPORT, which imports a single file as expected  
-- IMPORT_MULTI, which imports each file located inside of a directory independent of each other  
-- IMPORT_DIR, which runs each file in a directory within a single function  
+RedlinePack handles importing other files via three different pseudo functions:  
+- `IMPORT`, which loads a single file and returns it as a function  
+- `MPORT_MULTI`, which imports each file within a directory as it's own function, independent of each other  
+- `IMPORT_DIR`, which loads every file within a directory into one single function  
 
-> Only IMPORT and IMPORT_MULTI can return values!  
+> Only `IMPORT` and `IMPORT_MULTI` can return values!  
 
-Importing is done by simply calling the respective function.  
+Importing is done by simply calling the respective function with the file path of the file you'd like to import.  
 For example...  
 ```lua
-local test = IMPORT('src/test.lua') -- import a single file called "test.lua"
+local test = IMPORT('src/test.lua') -- import a single file called "test.lua"  
 
-local library1, library2 = IMPORTMULTI('src/libraries/') -- import every file located in src/libraries/
+local library1, library2 = IMPORTMULTI('src/libraries/') -- import every file located in src/libraries/ as two functions  
 
-IMPORTDIR('src/modules/') -- "inline" every file located in src/modules/
+IMPORTDIR('src/modules/') -- run every file located in src/modules/  
 ```
-> Note that these are not actual functions. You can't do something like this, it'll break.
+> Note that these are not actual functions. You can't do something like this, as it won't be recognized.  
 > ```lua
 > local a = 'scr/test.lua'
 > local new = IMPORT
@@ -57,7 +57,7 @@ IMPORTDIR('src/modules/') -- "inline" every file located in src/modules/
 > ```
 
 #### Building
-Unlike other file packers, RedlinePack is unique in that it doesn't take command line arguments. This is definitely an intentional limitation, and definitely not because I don't know how.  
+Unlike other file packers, RedlinePack is unique in that it doesn't take command line arguments. This helps keep the packer small and less complicated, but probably more annoying to use. Sorry about that.  
 
 In order to change build settings, you must edit the `settings.json` file. Most options are self explanatory, but the full list of them is below.  
 
@@ -70,12 +70,12 @@ In order to change build settings, you must edit the `settings.json` file. Most 
 
 **tabLength** - how many spaces each tab is. Defaults to `4`  
 **smartIndents** - fixes up formatting issues by trying to figure out and apply the current indentation level to the packed output. Defaults to `true`  
-> If **smartIndents** is true, make sure that **tabLength** is set to the tab length you use or else smartIndents won't work  
+> If **smartIndents** is true, make sure that **tabLength** is set to the tab length you use or else the formatting will be applied incorrectly!  
 
 **fileComments** - adds comments to the end of import statements displaying what file each import is. Defaults to `true`  
 **packerWatermark** - adds a RedlinePack watermark to the top of the final packed file. Defaults to `true`  
 **verboseLogs** - displays extra info logs when enabled, showing what happens in more detail. Defaults to `true`  
-**redundantImporting** - lets you import the same file multiple times. RedlinePack will stack overflow if redundant importing is used incorrectly, and therefore is very experimental! Defaults to `false`  
+**redundantImporting** - lets you import the same file multiple times. RedlinePack will overflow and break if redundant importing is used incorrectly, and therefore is very experimental! Defaults to `false`  
 > IMPORT_MULTI and IMPORT_DIR will check to see if you're importing the input file to stop overflows, but this doesn't stop everything. If you use redundantImporting, be careful! 
 
 ## Example input / output  
@@ -137,3 +137,4 @@ If you're still confused and want to know how to setup a project, take a look at
  - [x] Ability to enable redundant importing (Done on October 5, 2022)  
  - [x] Extra console output (Done on October 5, 2022)
  - [x] Intelligent formatting (Done on October 5, 2022)
+ - [x] Readme rewrite (Done on March 9th, 2023)
