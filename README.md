@@ -35,7 +35,7 @@ Alternatively, you can download an already setup "workspace" in the [releases se
 #### Importing
 RedlinePack handles importing other files via three different pseudo functions:  
 - `IMPORT`, which loads a single file and returns it as a function  
-- `MPORT_MULTI`, which imports each file within a directory as it's own function, independent of each other  
+- `IMPORT_MULTI`, which imports each file within a directory as it's own function, independent of each other  
 - `IMPORT_DIR`, which loads every file within a directory into one single function  
 
 > Only `IMPORT` and `IMPORT_MULTI` can return values!  
