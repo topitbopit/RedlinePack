@@ -76,6 +76,7 @@ In order to change build settings, you must edit the `settings.json` file. Most 
 **packerWatermark** - adds a RedlinePack watermark to the top of the final packed file. Defaults to `true`  
 **verboseLogs** - displays extra info logs when enabled, showing what happens in more detail. Defaults to `true`  
 **redundantImporting** - lets you import the same file multiple times. RedlinePack will overflow and break if redundant importing is used incorrectly, and therefore is very experimental! Defaults to `false`  
+**minify** - minifys the output. Smaller file size + smaller loading times depending on executor. Defaults to `false`
 > IMPORT_MULTI and IMPORT_DIR will check to see if you're importing the input file to stop overflows, but this doesn't stop everything. If you use redundantImporting, be careful! 
 
 ## Example input / output  
