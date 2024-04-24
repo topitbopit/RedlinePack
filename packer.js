@@ -47,7 +47,7 @@ let tags = {
     'info': `\x1b[38;5;250m[\x1b[38;5;231mINFO\x1b[38;5;250m]\x1b[0m `,
     'success': `\x1b[38;5;250m[\x1b[38;5;120mSUCCESS\x1b[38;5;250m]\x1b[0m `,
     'variable': `\x1b[38;5;123m`,
-    'red': \x1b[38;5;197m,
+    'red': `\x1b[38;5;197m`,
 } 
 
 let logConsole 
