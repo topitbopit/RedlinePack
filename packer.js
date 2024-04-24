@@ -415,7 +415,7 @@ if ( config.minify === true ) {
 
 if ( config.minify === true && config.packerWaterMark === true ) {
     result = `-- Packed using RedlinePack ${ ver }\n\n` + result
-else if ( config.packerWatermark === true ) {
+} else if ( config.packerWatermark === true ) {
     result = `-- Packed using RedlinePack ${ ver }\n` + result
 }
 
