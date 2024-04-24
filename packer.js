@@ -28,7 +28,7 @@ if ( fs.existsSync( 'settings.json' ) ) {
         "redundantImporting": false, // lets you import the same file multiple times; very risky, lets you infinitely import the same file!
         "packerWatermark": true, // adds a packer watermark 
         "verboseLogs": true, 
-        "minify": true,
+        "minify": false,
         
         // input / output 
         "outputFile": "compiled.lua",
