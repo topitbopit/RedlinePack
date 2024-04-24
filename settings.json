@@ -10,7 +10,7 @@
     "redundantImporting": false,
     "packerWatermark": true,
     "verboseLogs": true, 
-    "minifying": true,
+    "minifying": false,
     
     "outputFile": "compiled.lua",
     "inputFile": "src/main.lua"
