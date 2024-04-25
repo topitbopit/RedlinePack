@@ -1,7 +1,4 @@
 /* RedlinePack v1.1.1 */
-/* Written by topit for Redline */
-
-// Warning: I barely know any JS - let me know if anything can be done better
 
 const ver = 'v1.1.1'
 
@@ -14,25 +11,25 @@ if ( fs.existsSync( 'settings.json' ) ) {
     config = JSON.parse( fs.readFileSync( 'settings.json' ).toString() )
 } else {
     config = {
-        // keywords
+        // import keywords
         "keywordSingle": "IMPORT",
         "keywordDirectory": "IMPORT_DIR",
         "keywordMulti": "IMPORT_MULTI",
         
-        // tab spacing 
+        // indent stuff
         "tabLength": 4, // how many spaces each "tab" is
-        "smartIndents": true,  // tries to figure out the current indent level and indents the packed output accordingly 
+        "smartIndents": true,  // fixes indentation breaking in very specific cases
         
-        // extra 
-        "fileComments": true, // includes comments in the output displaying original file locations
-        "redundantImporting": false, // lets you import the same file multiple times; very risky, lets you infinitely import the same file!
-        "packerWatermark": true, // adds a packer watermark 
-        "verboseLogs": true, 
-        "minify": false,
-        
-        // input / output 
+        // file input / output
         "outputFile": "compiled.lua",
-        "inputFile": "src/main.lua"
+        "inputFile": "src/main.lua",
+        
+        // everything else
+        "fileComments": true, // includes comments in the output displaying original file locations
+        "redundantImporting": false, // lets you import the same file multiple times; this can result in infinite loops when used improperly
+        "packerWatermark": true, // adds a packer watermark 
+        "verboseLogs": true, // logs more debug information
+        "minifyOutput": false // minifies packed output with luamin
     }
     
     fs.writeFileSync( 'settings.json', JSON.stringify( config ) )
@@ -62,7 +59,7 @@ if ( config.verboseLogs === true ) {
 console.log( tags.red + `RedlinePack ${ ver }\n` + tags.reset )
 
 // funny regexes
-const parenMatch = `\\s*\\(?\\s*(?:'|"|\\[\\[)+(.+?)(:?'|"|\\]\\])[\\s\\)]?` // yea, i know this is awful
+const parenMatch = `\\s*\\(?\\s*(?:'|"|\\[\\[)+(.+?)(:?'|"|\\]\\])[\\s\\)]?` // yeah, i know this is awful
 const importDir = new RegExp( config.keywordDirectory + parenMatch, 'g' )
 const importMulti = new RegExp( config.keywordMulti + parenMatch, 'g' )
 const importSingle = new RegExp( config.keywordSingle + parenMatch, 'g' )
@@ -73,7 +70,7 @@ let singleTab = ' '.repeat( config.tabLength )
 function indentString ( text, indentSize ) {
     let tabs = singleTab.repeat( indentSize )
     
-    return text.split( /\n/ ).join( '\n' + tabs ) // theres prolly a better method than this but i couldnt find anything
+    return text.split( /\n/ ).join( '\n' + tabs ) // theres prob a better method than this but i couldnt find anything
 }
 
 // normally i'd inline this but i wont since there'll prob be tons of changes
@@ -88,7 +85,7 @@ function getIndentAmnt ( contents, importStatement ) {
         
         let prevText = contents.substring( 0, location ) // all the text before the statement 
         
-        let lines = prevText.split( '\n' )
+        let lines = prevText.split('\n')
         let thisLine = lines[lines.length - 1] // the line 
         
         let tabMatch = thisLine.match( /^([^\S\r\n])*/g )
@@ -259,7 +256,6 @@ class Packer {
                     continue  
                 }
                 
-                
                 let indentCount = getIndentAmnt( contents, importStatement )
                 let dirFiles = fs.readdirSync( importPath )
                 
@@ -333,7 +329,6 @@ class Packer {
                     continue  
                 }
                 
-                
                 let indentCount = getIndentAmnt( contents, importStatement )
                 let dirFiles = fs.readdirSync( importPath )
                 
@@ -388,8 +383,8 @@ class Packer {
             }
         };
         
+        logConsole( `Parsed file "${ filePath }"` )
         
-        logConsole( 'Parsed file ' + filePath )
         return {
             'status': true,
             'result': contents
@@ -401,22 +396,35 @@ if ( config.redundantImporting ) {
     console.log( tags.warn + 'RedundantImporting is experimental, and may be unstable!' + tags.reset )
 }
 
-logConsole( 'Creating new Packer...' )
 
 let thisPacker = new Packer()
-let { status, result } = thisPacker.parseFile( config.inputFile )
-logConsole( 'Finished packing!' )
+logConsole( 'Created new Packer' )
 
-if ( config.minify === true ) {
+let { status, result } = thisPacker.parseFile( config.inputFile )
+logConsole( 'Finished packing' )
+
+let minifyWorked = false // minification state is stored here in case some error happens
+if ( config.minifyOutput === true ) {
     console.log( tags.info + 'Minifying output' + tags.reset )
     
-    result = luamin.minify( result )
+    try {
+        let minified = luamin.minify( result )
+        result = minified
+        minifyWorked = true 
+    } catch ( error ) {
+        console.log( tags.warn + 'Minification failed; using default output instead' + tags.reset )
+        
+        logConsole( 'Error from luamin: ' + tags.red + `"${ error }"` ) 
+    }
 }
 
-if ( config.minify === true && config.packerWaterMark === true ) {
-    result = `-- Packed using RedlinePack ${ ver }\n\n` + result
-} else if ( config.packerWatermark === true ) {
-    result = `-- Packed using RedlinePack ${ ver }\n` + result
+if ( config.packerWatermark === true ) {
+    let prefix = `-- Packed using RedlinePack ${ ver }\n`
+    
+    if ( minifyWorked === true ) {
+        prefix += '\n' // Extra spacing to make it look clean 😎
+    }
+    result = prefix + result
 }
 
 fs.writeFileSync( config.outputFile, result )
