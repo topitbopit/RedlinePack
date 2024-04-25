@@ -1,12 +1,13 @@
-/* RedlinePack v1.1.0 */
+/* RedlinePack v1.1.1 */
 /* Written by topit for Redline */
 
 // Warning: I barely know any JS - let me know if anything can be done better
 
-const ver = 'v1.1.0'
+const ver = 'v1.1.1'
 
-const fs = require('fs')
-const path = require('path')
+const fs = require( 'fs' )
+const path = require( 'path' )
+const luamin = require( 'luamin' )
 
 let config // setting config 
 if ( fs.existsSync( 'settings.json' ) ) {
@@ -27,6 +28,7 @@ if ( fs.existsSync( 'settings.json' ) ) {
         "redundantImporting": false, // lets you import the same file multiple times; very risky, lets you infinitely import the same file!
         "packerWatermark": true, // adds a packer watermark 
         "verboseLogs": true, 
+        "minify": false,
         
         // input / output 
         "outputFile": "compiled.lua",
@@ -45,6 +47,7 @@ let tags = {
     'info': `\x1b[38;5;250m[\x1b[38;5;231mINFO\x1b[38;5;250m]\x1b[0m `,
     'success': `\x1b[38;5;250m[\x1b[38;5;120mSUCCESS\x1b[38;5;250m]\x1b[0m `,
     'variable': `\x1b[38;5;123m`,
+    'red': `\x1b[38;5;197m`,
 } 
 
 let logConsole 
@@ -56,7 +59,7 @@ if ( config.verboseLogs === true ) {
     logConsole = function () {} // this is amazing and definitely not bad practice
 }
 
-console.log( '\x1b[38;5;197m' + `RedlinePack ${ ver }\n` + tags.reset )
+console.log( tags.red + `RedlinePack ${ ver }\n` + tags.reset )
 
 // funny regexes
 const parenMatch = `\\s*\\(?\\s*(?:'|"|\\[\\[)+(.+?)(:?'|"|\\]\\])[\\s\\)]?` // yea, i know this is awful
@@ -155,7 +158,7 @@ class Packer {
                 'result': 1
             }
         }
-        if ( fileImported && !config.redundantImporting) {
+        if ( fileImported && !config.redundantImporting ) {
             console.log( tags.warn + `File "${ filePath }" was already imported` )
             
             return {
@@ -291,7 +294,7 @@ class Packer {
                     
                     builder.reset()
                 } else {
-                    console.log(tags.warn + `No files were found in the directory "${ importPath }"`)
+                    console.log( tags.warn + `No files were found in the directory "${ importPath }"` )
                     
                     builder.text( `(function() end)() -- ` + `No files were found in the directory "${ importPath }"` )
                     contents = contents.replace( importStatement, builder.result() )
@@ -395,7 +398,7 @@ class Packer {
 };
 
 if ( config.redundantImporting ) {
-    console.log( tags.warn + 'RedundantImporting is experimental, and may be unstable!' + tags.reset)
+    console.log( tags.warn + 'RedundantImporting is experimental, and may be unstable!' + tags.reset )
 }
 
 logConsole( 'Creating new Packer...' )
@@ -404,7 +407,15 @@ let thisPacker = new Packer()
 let { status, result } = thisPacker.parseFile( config.inputFile )
 logConsole( 'Finished packing!' )
 
-if ( config.packerWatermark === true ) {
+if ( config.minify === true ) {
+    console.log( tags.info + 'Minifying output' + tags.reset )
+    
+    result = luamin.minify( result )
+}
+
+if ( config.minify === true && config.packerWaterMark === true ) {
+    result = `-- Packed using RedlinePack ${ ver }\n\n` + result
+} else if ( config.packerWatermark === true ) {
     result = `-- Packed using RedlinePack ${ ver }\n` + result
 }
 
