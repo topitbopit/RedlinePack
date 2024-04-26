@@ -1,17 +1,18 @@
 {
-    "keywordSingle": "IMPORT",
-    "keywordDirectory": "IMPORT_DIR",
-    "keywordMulti": "IMPORT_MULTI",
-    
-    "tabLength": 4,
-    "smartIndents": false, 
-    
-    "outputFile": "compiled.lua",
     "inputFile": "src/main.lua",
-    
-    "fileComments": true, 
-    "packerWatermark": true,
+    "outputFile": "compiled.lua",
+        
+    "keywordSingle": "IMPORT",
+    "keywordMulti": "IMPORT_MULTI",
+    "keywordDirectory": "IMPORT_DIR",
+        
+    "tabLength": 4,
+    "smartIndents": true,
+        
     "redundantImporting": false,
-    "verboseLogs": true, 
-    "minifyOutput": false
+    "minifyOutput": false,
+
+    "fileComments": true,
+    "packerWatermark": true,
+    "verboseLogs": true
 }
