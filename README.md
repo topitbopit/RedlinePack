@@ -12,7 +12,7 @@ As the name suggests, this was written for the now discontinued [Redline](https:
 **Have any questions? Open up an issue on this repo. Contributions are appreciated!**  
 <br/>
 
-_* Except if minification is enabled 😅_  
+_*Except if minification is enabled 😅_  
 ## Alternatives
 Even though RedlinePack is super simple to use, it won't be the best tool for everyone. Here's a list of several other Lua packers that you can use in case RedlinePack doesn't work out:  
 
@@ -62,21 +62,23 @@ Unlike other file packers, RedlinePack is unique in that it doesn't take command
 
 In order to change build settings, you must edit the `settings.json` file. Most options are self explanatory, but the full list of them is below.  
 
-**keywordSingle** - The keyword used for single file imports. Defaults to `"IMPORT"`  
-**keywordDirectory** - The keyword used for directory imports. Defaults to `"IMPORT_DIR"`  
-**keywordMulti** - The keyword used for multi file imports. Defaults to `"IMPORT_MULTI"`  
-
-**tabLength** - How many spaces each tab is. If using `smartIndents`, make sure this value is accurate. Defaults to `4`  
-**smartIndents** - Fixes up formatting issues found in very specific cases by applying indentation to the packed output. Defaults to `true`  
-
-**outputFile** - The file to "compile" / pack everything into. Defaults to `"compiled.lua"`  
 **inputFile** - The file to start packing with. Defaults to `"src/main.lua"`  
+**outputFile** - The file to "compile" / pack everything into. Defaults to `"compiled.lua"`  
+
+**keywordSingle** - The keyword used for single file imports. Defaults to `"IMPORT"`  
+**keywordMulti** - The keyword used for multi file imports. Defaults to `"IMPORT_MULTI"`  
+**keywordDirectory** - The keyword used for directory imports. Defaults to `"IMPORT_DIR"`  
+
+**tabLength** - How many spaces each tab is. If you're using `smartIndents`, make sure this value is accurate. Defaults to `4`  
+**smartIndents** - Fixes up formatting issues found in very specific cases by applying extra indentation to the packed output. Defaults to `true`  
+
+**redundantImporting** - Lets you import the same file multiple times. RedlinePack can overflow and break if redundant importing is used incorrectly (e.g. file1 imports file2, file2 imports file1), and therefore is very experimental! Defaults to `false`  
+**minifyOutput** - Minifies the output with [luamin](https://github.com/mathiasbynens/luamin/tree/master). Smaller file size, but **doesn't support Luau**. Defaults to `false`  
 
 **fileComments** - Adds comments to the end of import statements displaying what file each import is. Defaults to `true`  
 **packerWatermark** - Adds a RedlinePack watermark to the top of the final packed file. Defaults to `true`  
-**redundantImporting** - Lets you import the same file multiple times. RedlinePack can overflow and break if redundant importing is used incorrectly (e.g. file1 imports file2, file2 imports file1), and therefore is very experimental! Defaults to `false`  
 **verboseLogs** - Displays extra info logs when enabled. Helpful for debugging. Defaults to `true`  
-**minifyOutput** - Minifies the output with [luamin](https://github.com/mathiasbynens/luamin/tree/master). Smaller file size, but **doesn't support Luau**. Defaults to `false`  
+
 
 ## Example input / output  
 #### Inputs  
