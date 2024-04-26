@@ -11,25 +11,27 @@ if ( fs.existsSync( 'settings.json' ) ) {
     config = JSON.parse( fs.readFileSync( 'settings.json' ).toString() )
 } else {
     config = {
+        // file input / output
+        "inputFile": "src/main.lua",
+        "outputFile": "compiled.lua",
+        
         // import keywords
         "keywordSingle": "IMPORT",
-        "keywordDirectory": "IMPORT_DIR",
         "keywordMulti": "IMPORT_MULTI",
+        "keywordDirectory": "IMPORT_DIR",
         
         // indent stuff
         "tabLength": 4, // how many spaces each "tab" is
         "smartIndents": true,  // fixes indentation breaking in very specific cases
         
-        // file input / output
-        "outputFile": "compiled.lua",
-        "inputFile": "src/main.lua",
+        // experimental stuff
+        "redundantImporting": false, // lets you import the same file multiple times; this can result in infinite loops when used improperly
+        "minifyOutput": false, // minifies packed output with luamin
         
         // everything else
         "fileComments": true, // includes comments in the output displaying original file locations
-        "redundantImporting": false, // lets you import the same file multiple times; this can result in infinite loops when used improperly
         "packerWatermark": true, // adds a packer watermark 
-        "verboseLogs": true, // logs more debug information
-        "minifyOutput": false // minifies packed output with luamin
+        "verboseLogs": true // logs more debug information
     }
     
     fs.writeFileSync( 'settings.json', JSON.stringify( config ) )
